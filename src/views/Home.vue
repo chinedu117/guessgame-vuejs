@@ -1,15 +1,6 @@
 <template>
-  <div class="container">
-    <div
-      class=" max-w-md mx-auto mt-4 p-4 shadow-md rounded-sm border border-gray-500"
-    >
-      <h3
-        class="w-24 text-4xl px-1 py-1 border-2 border-red-600 text-red-600 text-center my-4"
-      >
-        GTN
-      </h3>
-
-      <div class="font-thin text-xl mb-4">
+  <main-layout>
+     <div class="font-thin text-xl mb-4">
         Guess the secret <br />
         prime number!
       </div>
@@ -25,34 +16,75 @@
         <label for="" class="block font-bold">Guess the number</label>
         <div class="flex ">
 
-          <input type="text" class=" flex-grow border-red-500" />
+         
+          <input v-model="guess" type="text" class=" flex-grow " :class="[ isWrongGuess ? 'border-red-500' : '']"/>
+          
 
           <button
+            @click="check"
             type="button"
             class=" ml-3 px-4 bg-blue-600 text-white rounded-sm shadow-md font-bold "
           >
             Check
           </button>
         </div>
+          <p  v-show="isWrongGuess" class="text-red-600 text-sm">Wrong guess</p>
+        
       </div>
 
       <div class="mt-4 grid grid-cols-2 gap-2">
-
-          <div class="bg-green-700 text-center text-gray-300 text-3xl font-bold  p-10">?</div>
-          <div class="bg-green-700  text-center text-gray-300 text-3xl font-bold  p-10">?</div>
-          <div class="bg-green-700 text-center text-gray-300 text-3xl font-bold  p-10">?</div>
-          <div class="bg-green-700 text-center text-gray-300 text-3xl font-bold  p-10">?</div>
-
+         <guess-hint  v-for="(hint,index) in hints" :key="index" :hint="hint"/>
       </div>
-    </div>
-  </div>
+
+  </main-layout>
 </template>
 
 <script>
+import MainLayout from '@/layout/MainLayout.vue'
+import GuessHint from '@/components/GuessHint.vue'
 export default {
+  data () {
+    return {
+      guess: '',
+      isWrongGuess: false
+    }
+  },
+  
   created () {
-    
+      
+  },
+  computed: {
+    hints(){
+       return this.$store.state.hints
+    },
+    answer(){
+       return this.$store.state.answer
+    }
   },
   name: "Home",
+  components: { MainLayout, GuessHint },
+  methods: {
+    check(){
+      this.$store.dispatch('incrementGuessCount')
+       if(this.answer == this.guess.trim())
+       {
+          this.$router.push({name: 'Success'})
+          return;
+       }
+       this.isWrongGuess = true
+       
+       var context = this
+       setTimeout(()=>{
+          context.clear()
+       },2000)
+
+    },
+
+    clear(){
+       this.isWrongGuess = false
+       this.guess = ''
+    }
+  }
+
 };
 </script>
