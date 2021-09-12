@@ -43,6 +43,10 @@
 import MainLayout from '@/layout/MainLayout.vue'
 import GuessHint from '@/components/GuessHint.vue'
 export default {
+   name: "Home",
+  created () {
+      
+  },
   data () {
     return {
       guess: '',
@@ -50,9 +54,7 @@ export default {
     }
   },
   
-  created () {
-      
-  },
+  
   computed: {
     hints(){
        return this.$store.state.hints
@@ -61,7 +63,7 @@ export default {
        return this.$store.state.answer
     }
   },
-  name: "Home",
+ 
   components: { MainLayout, GuessHint },
   methods: {
     check(){
