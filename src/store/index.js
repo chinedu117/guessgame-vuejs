@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-
+import axios from 'axios'
 
 export default createStore({
   state: {
@@ -17,9 +17,9 @@ export default createStore({
     incrementHintCount(state){
        state.hintCount +=1
     },
-    setQuestion(state,payload){
+    setSecretAndClues(state,payload){
       state.hints = payload.sum_clues.split(',')
-      state.answer = payload.prime_number_secret
+      state.answer = payload.prime_secret_number
     },
 
   },
@@ -34,8 +34,17 @@ export default createStore({
 
     
 
-    getQuestion({commit}){
-       
+    getSecret({commit}){
+        axios.post('http://127.0.0.1:8000/get_secret').
+        then(res => {
+          
+           commit('setSecretAndClues',res.data);
+           console.log(res)
+
+        }).catch(error => {
+
+            console.log(error)
+        })
     }
 
   },

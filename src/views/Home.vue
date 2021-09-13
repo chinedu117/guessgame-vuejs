@@ -45,7 +45,7 @@ import GuessHint from '@/components/GuessHint.vue'
 export default {
    name: "Home",
   created () {
-      
+      this.$store.dispatch('getSecret')
   },
   data () {
     return {
